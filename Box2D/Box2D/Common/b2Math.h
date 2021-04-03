@@ -113,6 +113,12 @@ struct b2Vec2
 		x *= a; y *= a;
 	}
 
+	b2Vec2 operator * (float32 a) const
+	{
+		return b2Vec2(x * a, y * a);
+	}
+
+
 	/// Get the length of this vector (the norm).
 	float32 Length() const
 	{
@@ -145,6 +151,29 @@ struct b2Vec2
 	bool IsValid() const
 	{
 		return b2IsValid(x) && b2IsValid(y);
+	}
+
+	bool operator == ( const b2Vec2& v ) const
+	{
+		return ( abs(x - v.x) < 0.0001f && abs(y - v.y) < 0.0001f );
+	}
+
+	bool operator != ( const b2Vec2& v ) const
+	{
+		return ( abs(x - v.x) > 0.0001f || abs(y - v.y) > 0.0001f );
+	}
+
+	float32 Angle( const b2Vec2& v ) const
+	{
+		b2Vec2 s(x, y), t( v.x, v.y );
+
+		s.Normalize(); t.Normalize();
+		return acosf( s.x * t.x + s.y * t.y );
+	}
+
+	float32 Angle() const
+	{
+		return atan2f(y, x);
 	}
 
 	float32 x, y;
@@ -620,5 +649,9 @@ inline void b2Sweep::Normalize()
 	a0 -= d;
 	a -= d;
 }
+//-----------------------------------------------------------------------------
+
+typedef b2Vec2 vector2f;
+//-----------------------------------------------------------------------------
 
 #endif
